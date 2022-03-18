@@ -4,10 +4,10 @@ main() {
   // Dart server
   var io = Server();
   io.on('connection', (client) {
-    print('connection');
+    print("Connection=> ${(client as Socket).id}");
     client.on('isConnected', (data) {
       print('Result => $data');
-      client.emit('connectionStatus', "success");
+      client.emit('connectionStatus', "success: ${(client).id}");
     });
 
     client.on('createOrderSend', (data) {
@@ -21,6 +21,15 @@ main() {
     client.on('deleteOrderSend', (data) {
       print('Result => $data');
       client.emit('deleteOrderResponse', data);
+    });
+
+    client.on("disconnecting", (data) {
+      print("Disconnecting=> ${(client).id}");
+      print("Disconnecting=> $data");
+    });
+
+    client.on("disconnect", (data) {
+      print("Disconnect=> $data");
     });
   });
   io.listen(8083);
